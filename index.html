@@ -27,6 +27,7 @@
         display: inline-block;
         padding: 6px 12px;
         cursor: pointer;
+        font-size: 16px; /* Increased font size */
       }
 
       #chooseFileLabel {
@@ -37,12 +38,15 @@
 
       #imageContainer {
         margin: 20px;
+        border: 2px solid #4CAF50; /* Add a border */
+        padding: 10px;
+        max-width: 100%;
+        overflow: hidden;
       }
 
-      #compressedImage {
-        max-width: 400px;
-        max-height: 400px;
-        border: 2px solid #4CAF50;
+      #selectedImage, #compressedImage {
+        max-width: 100%; /* Force images to fit inside the container */
+        border: 2px solid #4CAF50; /* Add a border around the images */
         border-radius: 5px;
         margin-top: 10px;
       }
@@ -70,8 +74,23 @@
 
       p {
         color: #FFFFFF;
-        font-size: 14px;
+        font-size: 18px; /* Increased font size */
         margin-top: 20px;
+      }
+
+      /* Beautify the Compress Image button */
+      #compressButton {
+        background-color: #4CAF50; /* Green button color */
+        color: #FFFFFF; /* White text color */
+        border: 2px solid #4CAF50; /* Add a border */
+        border-radius: 5px;
+        padding: 12px 24px;
+        cursor: pointer;
+        font-size: 20px; /* Increased font size */
+      }
+
+      #compressButton:hover {
+        background-color: #45a049; /* Darker green on hover */
       }
     </style>
   </head>
@@ -84,7 +103,7 @@
 
     <div id="imageContainer">
       <h2>Selected Image</h2>
-      <img src="" alt="Selected Image" id="selectedImage" style="max-width: 100%;" />
+      <img src="" alt="Selected Image" id="selectedImage" />
     </div>
 
     <label for="qualityInput">JPEG Quality (0.1 - 1.0):</label>
