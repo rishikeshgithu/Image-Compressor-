@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Image Compression</title>
+    <style>
+      body {
+        background-color: #FF9933; /* Saffron background color */
+        font-family: Arial, sans-serif;
+        text-align: center;
+      }
+
+      h1 {
+        color: #FFFFFF; /* White text color */
+      }
+
+      #imageInput {
+        display: none; /* Hide the file input visually */
+      }
+
+      .custom-file-upload {
+        border: 2px solid #4CAF50;
+        color: #4CAF50;
+        background-color: white;
+        border-radius: 5px;
+        display: inline-block;
+        padding: 6px 12px;
+        cursor: pointer;
+      }
+
+      #chooseFileLabel {
+        color: #4CAF50;
+        font-weight: bold;
+        cursor: pointer;
+      }
+
+      #imageContainer {
+        margin: 20px;
+      }
+
+      #compressedImage {
+        max-width: 400px;
+        max-height: 400px;
+        border: 2px solid #4CAF50;
+        border-radius: 5px;
+        margin-top: 10px;
+      }
+
+      #output {
+        margin-top: 20px;
+        color: #333;
+        font-weight: bold;
+        text-align: left;
+        padding: 10px;
+        border-radius: 5px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+      }
+
+      a {
+        display: block;
+        margin-top: 10px;
+        color: #4CAF50; /* Green text color for download link */
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      p {
+        color: #FFFFFF;
+        font-size: 14px;
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Image Compression</h1>
+    <p>Reduce the size of your images while maintaining quality! Upload an image, choose the JPEG quality (0.1 - 1.0) to customize your output, and let us handle the rest.</p>
+
+    <label for="imageInput" id="chooseFileLabel" class="custom-file-upload">Choose File</label>
+    <input type="file" id="imageInput" accept=".jpg, .jpeg, .png" />
+
+    <div id="imageContainer">
+      <h2>Selected Image</h2>
+      <img src="" alt="Selected Image" id="selectedImage" style="max-width: 100%;" />
+    </div>
+
+    <label for="qualityInput">JPEG Quality (0.1 - 1.0):</label>
+    <input type="number" id="qualityInput" step="0.1" min="0.1" max="1.0" value="0.7" />
+
+    <button id="compressButton">Compress Image</button>
+
+    <div id="output"></div>
+
+    <div id="imageContainer">
+      <h2>Compressed Image</h2>
+      <img src="" alt="Compressed Image" id="compressedImage" />
+    </div>
+
+    <p>This service is provided by Saffron Vivid Solutions.</p>
+
+    <script>
+      document.getElementById("chooseFileLabel").addEventListener("click", function () {
+        document.getElementById("imageInput").click();
+      });
+
+      document.getElementById("imageInput").addEventListener("change", function () {
+        var selectedImage = document.getElementById("selectedImage");
+        var imageInput = document.getElementById("imageInput");
+        var file = imageInput.files[0];
+
+        if (file) {
+          var reader = new FileReader();
+          reader.onload = function (e) {
+            selectedImage.src = e.target.result;
+          };
+          reader.readAsDataURL(file);
+        } else {
+          selectedImage.src = "";
+        }
+      });
+
+      document.getElementById("compressButton").addEventListener("click", function () {
+        var input = document.getElementById("imageInput");
+        var qualityInput = document.getElementById("qualityInput");
+        var output = document.getElementById("output");
+        var compressedImage = document.getElementById("compressedImage");
+
+        if (input.files.length > 0) {
+          var file = input.files[0];
+          var image = new Image();
+          image.src = URL.createObjectURL(file);
+
+          image.onload = function () {
+            var canvas = document.createElement("canvas");
+            var ctx = canvas.getContext("2d");
+
+            // Set the desired width and height for the compressed image
+            var maxWidth = 400;
+            var maxHeight = 400;
+            var width = image.width;
+            var height = image.height;
+
+            if (width > height) {
+              if (width > maxWidth) {
+                height *= maxWidth / width;
+                width = maxWidth;
+              }
+            } else {
+              if (height > maxHeight) {
+                width *= maxHeight / height;
+                height = maxHeight;
+              }
+            }
+
+            canvas.width = width;
+            canvas.height = height;
+
+            // Draw the image on the canvas with the new dimensions
+            ctx.drawImage(image, 0, 0, width, height);
+
+            // Get the selected quality level from the input field
+            var selectedQuality = parseFloat(qualityInput.value);
+
+            // Convert the canvas content back to a compressed image with the selected quality
+            var compressedDataUrl = canvas.toDataURL("image/jpeg", selectedQuality);
+
+            // Display the compressed image
+            compressedImage.src = compressedDataUrl;
+
+            // Create a download link for the compressed image
+            var downloadLink = document.createElement("a");
+            downloadLink.href = compressedDataUrl;
+            downloadLink.download = "compressed_image.jpg";
+            downloadLink.textContent = "Download Compressed Image";
+            output.innerHTML = "Compression done";
+            output.appendChild(downloadLink);
+          };
+        } else {
+          output.textContent = "Please select an image to compress.";
+        }
+      });
+    </script>
+  </body>
+</html>
