@@ -1,5 +1,5 @@
 % Load the image
-img = imread('image.jpg');
+img = imread('image.jpeg');
 
 % Convert the image to grayscale
 img_gray = rgb2gray(img);
